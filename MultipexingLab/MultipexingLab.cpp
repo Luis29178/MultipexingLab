@@ -5,7 +5,7 @@
 #include <winsock2.h>
 #pragma comment(lib,"Ws2_32.lib")
 
-enum Messages
+enum MESSAGES
 {
     INVALID_INPUT,
     S_CLIENT,
@@ -15,23 +15,45 @@ enum Messages
 };
 
 int type;
-std::string IpAdress;
+char* tempType;
 int port;
+char* tempPort;
+int result;
+char* IpAdress;
+std::string input;
 
-SOCKET ComSocket;
-SOCKET ListenSocket;
+
+// Function Declarations
+std::string returnMessage(int messageID);
+int clientConnect(int port, char* ipAdress);
 
 int main()
 {
+    // Complete as of 8/9/2022
+    #pragma region GetType
+
     std::cout << "\t\t Select Type\n" << "1) Client\n" << "2) Server\n" << std::endl;
     
-    std::cin >> type;
+    std::cin >> input;
+    type = atoi(input.c_str());
 
+        #pragma endregion                 
+
+
+#pragma region SetupSwitch
     switch (type)
     {
     case 1:
         //TODO: Implement Client Connecection 
-        std::cout << returnMessage(S_CLIENT) << std::endl;
+        std::cout << returnMessage(S_CLIENT) << std::endl << std::endl;
+
+        std::cout << "Specify Port: ";
+        std::cin >> tempPort;
+        port = (int)tempPort;
+        std::cout << std::endl << "Specify Address: ";
+        result = clientConnect(port, IpAdress);
+        std::cout << returnMessage(result) << std::endl;
+
 
 
         break;
@@ -45,6 +67,8 @@ int main()
         std::cout << returnMessage(INVALID_INPUT) << std::endl;
         break;
     }
+#pragma endregion
+
 
 
 
@@ -52,15 +76,24 @@ int main()
 
     
 }
+int clientConnect(int port, char* ipAdress)
+{
+
+    return 0;
+}
 
 std::string returnMessage(int messageID)
 {
-    std::string errorMessage;
 
     switch (messageID)
     {
     case 0:
         return "Invalid Input!!";
+    case 1:
+        return "Client Selected.\n";
+    case 2:
+        return "Server Selected.\n";
+
 
 
 
