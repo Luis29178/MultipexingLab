@@ -2,30 +2,32 @@
 //
 
 #include <iostream>
+#include "MessageEnum.h"
 #include <winsock2.h>
 #pragma comment(lib,"Ws2_32.lib")
 
-enum MESSAGES
-{
-    INVALID_INPUT,
-    S_CLIENT,
-    S_SERVER,
 
-
-};
 
 int type;
-char* tempType;
 int port;
-char* tempPort;
 int result;
 char* IpAdress;
 std::string input;
 
 
-// Function Declarations
+#pragma region Function Declaration Zone 
 std::string returnMessage(int messageID);
+std::string CallInput();
+
+char* StringToChar_arr(std::string convString);
 int clientConnect(int port, char* ipAdress);
+int serverConnect(int port, char* ipAdress);
+int StringToInt(std::string convString);
+
+
+
+#pragma endregion
+
 
 int main()
 {
@@ -33,14 +35,13 @@ int main()
     #pragma region GetType
 
     std::cout << "\t\t Select Type\n" << "1) Client\n" << "2) Server\n" << std::endl;
-    
-    std::cin >> input;
-    type = atoi(input.c_str());
+    input = CallInput();
+    type = StringToInt(input);
 
         #pragma endregion                 
 
 
-#pragma region SetupSwitch
+    #pragma region SetupSwitch
     switch (type)
     {
     case 1:
@@ -48,9 +49,15 @@ int main()
         std::cout << returnMessage(S_CLIENT) << std::endl << std::endl;
 
         std::cout << "Specify Port: ";
-        std::cin >> tempPort;
-        port = (int)tempPort;
+        input = CallInput();
+        port = StringToInt(input);
+
+
         std::cout << std::endl << "Specify Address: ";
+        input = CallInput();
+        IpAdress = StringToChar_arr(input);
+
+
         result = clientConnect(port, IpAdress);
         std::cout << returnMessage(result) << std::endl;
 
@@ -61,13 +68,27 @@ int main()
         //TODO: Implement Server Connection
         std::cout << returnMessage(S_SERVER) << std::endl;
 
+        std::cout << "Specify Port: ";
+        input = CallInput();
+        port = StringToInt(input);
+
+
+        std::cout << std::endl << "Specify Address: ";
+        input = CallInput();
+        IpAdress = StringToChar_arr(input);
+
+        result = serverConnect(port, IpAdress);
+        std::cout << returnMessage(result) << std::endl;
+
+
+
 
         break;
     default:
         std::cout << returnMessage(INVALID_INPUT) << std::endl;
         break;
     }
-#pragma endregion
+    #pragma endregion
 
 
 
@@ -76,9 +97,14 @@ int main()
 
     
 }
+int serverConnect(int port, char* ipAdress)
+{
+    //TODO: implement function to retunr instance of ClientClass
+    return 0;
+}
 int clientConnect(int port, char* ipAdress)
 {
-
+    //TODO: implement Function to return instance of clientClass
     return 0;
 }
 
@@ -87,11 +113,11 @@ std::string returnMessage(int messageID)
 
     switch (messageID)
     {
-    case 0:
+    case INVALID_INPUT:
         return "Invalid Input!!";
-    case 1:
+    case S_CLIENT:
         return "Client Selected.\n";
-    case 2:
+    case S_SERVER:
         return "Server Selected.\n";
 
 
@@ -102,7 +128,25 @@ std::string returnMessage(int messageID)
     }
 
 }
+char* StringToChar_arr(std::string convString)
+{
+    int len = (int)convString.length();
+    char* Char_arr = new char[len + 1];
+    strcpy(Char_arr, convString.c_str());
+    return Char_arr;
+}
+int StringToInt(std::string ConvString)
+{
 
+    return atoi(ConvString.c_str());
+
+}
+std::string CallInput()
+{
+    std::string x;
+    std::cin >> x ;
+    return  x;
+}
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
 

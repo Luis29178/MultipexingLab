@@ -140,6 +140,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="MultipexingLab.cpp" />
+    <ClCompile Include="PlatformBase.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MessageEnum.h" />
+    <ClInclude Include="PlatformBase.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
