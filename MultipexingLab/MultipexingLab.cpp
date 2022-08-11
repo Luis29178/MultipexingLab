@@ -1,18 +1,20 @@
 // MultipexingLab.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-
 #include <iostream>
-#include "MessageEnum.h"
 #include <winsock2.h>
 #pragma comment(lib,"Ws2_32.lib")
+#pragma warning(disable  : 4996)
 
-
+#include "MessageEnum.h"
+#include "Client.h"
+#include "Server.h"
 
 int type;
 int port;
 int result;
 char* IpAdress;
 std::string input;
+
 
 
 #pragma region Function Declaration Zone 
@@ -28,9 +30,12 @@ int StringToInt(std::string convString);
 
 #pragma endregion
 
-
+Client _client;
+Server _server;
 int main()
-{
+{   
+    WSADATA wsadata;
+    WSAStartup(WINSOCK_VERSION, &wsadata);
     // Complete as of 8/9/2022
     #pragma region GetType
 
@@ -40,7 +45,7 @@ int main()
 
         #pragma endregion                 
 
-
+   
     #pragma region SetupSwitch
     switch (type)
     {
@@ -60,6 +65,8 @@ int main()
 
         result = clientConnect(port, IpAdress);
         std::cout << returnMessage(result) << std::endl;
+        
+        
 
 
 
@@ -81,8 +88,6 @@ int main()
         std::cout << returnMessage(result) << std::endl;
 
 
-
-
         break;
     default:
         std::cout << returnMessage(INVALID_INPUT) << std::endl;
@@ -95,17 +100,21 @@ int main()
 
 
 
+
+
+
     
+}
+
+int clientConnect(int port, char* ipAdress)
+{
+    _client = Client();
+    return _client.ConnectService(port, IpAdress);
 }
 int serverConnect(int port, char* ipAdress)
 {
-    //TODO: implement function to retunr instance of ClientClass
-    return 0;
-}
-int clientConnect(int port, char* ipAdress)
-{
-    //TODO: implement Function to return instance of clientClass
-    return 0;
+    _server = Server();
+    return _server.ConnectService(port, IpAdress);
 }
 
 std::string returnMessage(int messageID)
@@ -119,8 +128,16 @@ std::string returnMessage(int messageID)
         return "Client Selected.\n";
     case S_SERVER:
         return "Server Selected.\n";
-
-
+    case SUCCESS:
+        return "Success!\n";
+    case MESSAGE_ERROR:
+        return "Message Failed!\n";
+    case PARAMETER_ERROR:
+        return "Outside of Parameters!\n";
+    case SCK_ERROR:
+        return "Socket Error!\n";
+    case INVAL_SOCKET:
+        return "Invalid Socket!\n";
 
 
     default:
