@@ -38,30 +38,22 @@ int Server::ConnectService(uint16_t port, char* address)
 			return SELECT_ERROR;
 
 		}
+		if (FD_ISSET(listenSocket, &readySockets)) {
+			ComSocket = accept(listenSocket, NULL,NULL);
+			FD_SET(ComSocket, &currSockets);
 
-
-		for (int i = 0; i < readySockets.fd_count; i++){
+		}
+		for (int i = 0; i < socketCount; i++){
 			//^ for & v if : both work to itterate throught fd_sets
-			int check = FD_ISSET(readySockets.fd_array[i], &readySockets);
-			if (FD_ISSET(readySockets.fd_array[i], &readySockets)) {
-				
-				if (readySockets.fd_array[i] == listenSocket || socketCount <= 1){
-					ComSocket = accept(listenSocket, NULL,NULL);
-					if (ComSocket == INVALID_SOCKET)
-					{
-						int error = WSAGetLastError();
-						return INVAL_SOCKET;
-					}
-					FD_SET(ComSocket, &currSockets);
+			if (readySockets.fd_array[i] != listenSocket) {
 
-				}
-				else
-				{
-					readMessage(readySockets.fd_array[i]);
-					
-				}
+				readMessage(readySockets.fd_array[i]);
 
 			}
+					
+				
+
+			
 		}
 
 	}
