@@ -2,7 +2,7 @@
 
 int Client::ConnectService(uint16_t port, char* address)
 {
-	ComSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	//Comsocket Defined in constructor
 	if (ComSocket == INVALID_SOCKET)
 	{
 		return INVAL_SOCKET;
@@ -22,7 +22,58 @@ int Client::ConnectService(uint16_t port, char* address)
 
 	return SUCCESS;
 }
+int Client::readMessage(char* buffer, int32_t size)
+{
+
+
+	int len = recv(ComSocket, buffer, size, 0);
+	if ((len == SOCKET_ERROR) || (len == 0))
+	{
+		return DISCONNECT;
+	}
+	if (len > size)
+	{
+		return PARAMETER_ERROR;
+	}
+
+
+	result = reciveTcpData(ComSocket, (char*)buffer, len);
+	if ((result == SOCKET_ERROR) || (result == 0))
+	{
+		return MESSAGE_ERROR;
+	}
+
+	return SUCCESS;
+}
+int Client::sendMessage(char* data, int32_t length)
+{
+
+	int len = send(ComSocket, (const char*)data, length, 0);
+	if ((len == SOCKET_ERROR) || (len == 0))
+	{
+		return DISCONNECT;
+	}
+	if (len > length || len < 0)
+	{
+		return PARAMETER_ERROR;
+	}
+
+
+
+	result = sendTcpData(ComSocket, data, len);
+	if ((result == SOCKET_ERROR) || (result == 0))
+	{
+
+		int error = WSAGetLastError();
+		return MESSAGE_ERROR;
+
+	}
+
+	return SUCCESS;
+}
  Client::Client(){
+	 ComSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	 result = 0;
 
 
 }

@@ -3,6 +3,8 @@
 #include <iostream>
 #include <winsock2.h>
 #pragma comment(lib,"Ws2_32.lib")
+
+// Overides warning 4996 call refering to unsafe copying of user inputs
 #pragma warning(disable  : 4996)
 
 #include "MessageEnum.h"
@@ -36,6 +38,8 @@ int main()
 {   
     WSADATA wsadata;
     WSAStartup(WINSOCK_VERSION, &wsadata);
+
+
     // Complete as of 8/9/2022
     #pragma region GetType
 
@@ -45,7 +49,7 @@ int main()
 
         #pragma endregion                 
 
-   
+    // Complete as of 8/11/2022
     #pragma region SetupSwitch
     switch (type)
     {
@@ -65,10 +69,6 @@ int main()
 
         result = clientConnect(port, IpAdress);
         std::cout << returnMessage(result) << std::endl;
-        
-        
-
-
 
         break;
     case 2:
@@ -87,7 +87,6 @@ int main()
         result = serverConnect(port, IpAdress);
         std::cout << returnMessage(result) << std::endl;
 
-
         break;
     default:
         std::cout << returnMessage(INVALID_INPUT) << std::endl;
@@ -96,11 +95,21 @@ int main()
     #pragma endregion
 
 
+    switch (type)
+    {
+    case 1:
 
+        break;
 
+    case 2:
 
+        break;
+    default:
 
+        break;
 
+    }
+#pragma endregion
 
 
     
@@ -123,21 +132,21 @@ std::string returnMessage(int messageID)
     switch (messageID)
     {
     case INVALID_INPUT:
-        return "Invalid Input!!";
+        return "\nInvalid Input!!\n";
     case S_CLIENT:
-        return "Client Selected.\n";
+        return "\nClient Selected.\n";
     case S_SERVER:
-        return "Server Selected.\n";
+        return "\nServer Selected.\n";
     case SUCCESS:
-        return "Success!\n";
+        return "\nSuccess!\n";
     case MESSAGE_ERROR:
-        return "Message Failed!\n";
+        return "\nMessage Failed!\n";
     case PARAMETER_ERROR:
-        return "Outside of Parameters!\n";
+        return "\nOutside of Parameters!\n";
     case SCK_ERROR:
-        return "Socket Error!\n";
+        return "\nSocket Error!\n";
     case INVAL_SOCKET:
-        return "Invalid Socket!\n";
+        return "\nInvalid Socket!\n";
 
 
     default:
@@ -164,13 +173,3 @@ std::string CallInput()
     std::cin >> x ;
     return  x;
 }
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
