@@ -1,5 +1,7 @@
 #include "Client.h"
-
+#include <iostream>
+#include <string>
+#include <charconv>
 int Client::ConnectService(uint16_t port, char* address)
 {
 	//Comsocket Defined in constructor
@@ -18,15 +20,19 @@ int Client::ConnectService(uint16_t port, char* address)
 
 		return SCK_ERROR;
 	}
-
+	
+	
 
 	return SUCCESS;
 }
-int Client::readMessage(char* buffer, int32_t size)
+int Client::readMessage()
 {
+	//will set a buffer to recive 4 bites
+	int32_t size = 16;
+	byte* buffer = new byte[size];
 
 
-	int len = recv(ComSocket, buffer, size, 0);
+	int len = recv(ComSocket, (char*)buffer , size, 0);
 	if ((len == SOCKET_ERROR) || (len == 0))
 	{
 		return DISCONNECT;
@@ -35,7 +41,8 @@ int Client::readMessage(char* buffer, int32_t size)
 	{
 		return PARAMETER_ERROR;
 	}
-
+	delete[] buffer;
+	buffer = new byte[len];
 
 	result = reciveTcpData(ComSocket, (char*)buffer, len);
 	if ((result == SOCKET_ERROR) || (result == 0))
@@ -47,21 +54,16 @@ int Client::readMessage(char* buffer, int32_t size)
 }
 int Client::sendMessage(char* data, int32_t length)
 {
+	char* buffer = int_to_char_arr(length);
 
-	int len = send(ComSocket, (const char*)data, length, 0);
-	if ((len == SOCKET_ERROR) || (len == 0))
+	result = send(ComSocket, (const char*)buffer, sizeof(buffer), 0);
+	if ((result == SOCKET_ERROR))
 	{
-		return DISCONNECT;
+		return SCK_ERROR;
 	}
-	if (len > length || len < 0)
-	{
-		return PARAMETER_ERROR;
-	}
-
-
-
-	result = sendTcpData(ComSocket, data, len);
-	if ((result == SOCKET_ERROR) || (result == 0))
+	
+	result = sendTcpData(ComSocket, data, length);
+	if ((result == SOCKET_ERROR))
 	{
 
 		int error = WSAGetLastError();
@@ -70,6 +72,16 @@ int Client::sendMessage(char* data, int32_t length)
 	}
 
 	return SUCCESS;
+}
+char* Client::int_to_char_arr(int _int)
+{
+	int length = std::to_string(_int).length();
+	//convert int to string
+	std::string tempstring = std::to_string(_int);
+	//convert string to char
+	char* c = const_cast<char*>(tempstring.c_str());
+	
+	return c;
 }
  Client::Client(){
 	 ComSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);

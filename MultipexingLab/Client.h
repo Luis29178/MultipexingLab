@@ -17,8 +17,9 @@ private:
 public:
 	
     int ConnectService(uint16_t port, char* address);
-	int readMessage(char* buffer, int32_t size);
+	int readMessage();
 	int sendMessage(char* data, int32_t length);
+	char* int_to_char_arr(int _int);
 	Client();
 
 	

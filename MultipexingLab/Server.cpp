@@ -38,23 +38,30 @@ int Server::ConnectService(uint16_t port, char* address)
 			return SELECT_ERROR;
 
 		}
+
 		if (FD_ISSET(listenSocket, &readySockets)) {
-			ComSocket = accept(listenSocket, NULL,NULL);
+
+			sizeOfUsereaddr = sizeof(struct sockaddr);
+			ComSocket = accept(listenSocket, &userAddr,&sizeOfUsereaddr);
+			sockaddr_in *temp = (sockaddr_in*)&userAddr;
+			char* adress = inet_ntoa(temp->sin_addr);
+
+
 			FD_SET(ComSocket, &currSockets);
 
 		}
-		for (int i = 0; i < socketCount; i++){
-			//^ for & v if : both work to itterate throught fd_sets
-			if (readySockets.fd_array[i] != listenSocket) {
+		else {
+			for (int i = 0; i < socketCount; i++) {
+				//^ for & v if : both work to itterate throught fd_sets
+				if (readySockets.fd_array[i] != listenSocket) {
 
-				readMessage(readySockets.fd_array[i]);
+					readMessage(readySockets.fd_array[i]);
+
+				}
 
 			}
-					
-				
-
-			
 		}
+
 
 	}
 
@@ -122,5 +129,6 @@ Server::Server() {
 	ComSocket = NULL;
 	listenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	result = 0;
+	
 
 }

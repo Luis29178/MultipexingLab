@@ -25,6 +25,7 @@ std::string CallInput();
 
 char* StringToChar_arr(std::string convString);
 int clientConnect(int port, char* ipAdress);
+int clientRcv(int port, char* ipAdress);
 int serverConnect(int port, char* ipAdress);
 int StringToInt(std::string convString);
 
@@ -70,6 +71,8 @@ int main()
         result = clientConnect(port, IpAdress);
         std::cout << returnMessage(result) << std::endl;
 
+        
+
         break;
     case 2:
         //TODO: Implement Server Connection
@@ -87,6 +90,12 @@ int main()
         result = serverConnect(port, IpAdress);
         std::cout << returnMessage(result) << std::endl;
 
+        while (true)
+        {
+            clientRcv(port, IpAdress);
+
+        }
+
         break;
     default:
         std::cout << returnMessage(INVALID_INPUT) << std::endl;
@@ -95,20 +104,7 @@ int main()
     #pragma endregion
 
 
-    switch (type)
-    {
-    case 1:
-
-        break;
-
-    case 2:
-
-        break;
-    default:
-
-        break;
-
-    }
+  
 #pragma endregion
 
 
@@ -119,6 +115,12 @@ int clientConnect(int port, char* ipAdress)
 {
     _client = Client();
     return _client.ConnectService(port, IpAdress);
+}
+int clientRcv(int port, char* ipAdress)
+{
+    
+    return _client.readMessage();
+
 }
 int serverConnect(int port, char* ipAdress)
 {
