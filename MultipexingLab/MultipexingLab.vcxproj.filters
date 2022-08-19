@@ -47,5 +47,8 @@
     <ClInclude Include="UserInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CommandEnum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

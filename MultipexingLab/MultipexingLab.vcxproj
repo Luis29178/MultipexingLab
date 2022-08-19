@@ -147,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h" />
+    <ClInclude Include="CommandEnum.h" />
     <ClInclude Include="MessageEnum.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Server.h" />

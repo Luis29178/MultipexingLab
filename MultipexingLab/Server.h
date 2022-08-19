@@ -16,7 +16,8 @@ class Server
 private:
 	
 	//holds users info
-	UserInfo* Users = new UserInfo[5];
+	UserInfo* Users = new UserInfo[3];
+	int UserCount;
 	
 	fd_set currSockets, readySockets;
 	sockaddr userAddr;
@@ -24,11 +25,16 @@ private:
 	SOCKET ComSocket;
 	int result;
 	int sizeOfUsereaddr;
+	
 
 public:
+	int tcp_recv_whole(SOCKET s, char* buf, int len);
+	char* FirtsLogAck;
 	int ConnectService(uint16_t port, char* address);
-	int readMessage(SOCKET _comSocket);
-	int sendMessage(char* data, int32_t length);
+	int commandHandeler(char* _command);
+	//int readMessage(SOCKET _comSocket);
+	//int sendMessage(int s ,char* data, int32_t length);
+	char* int_to_char_arr(int _int);
 	Server();
 
 };

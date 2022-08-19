@@ -93,7 +93,7 @@ int main()
         while (true)
         {
             clientRcv(port, IpAdress);
-
+            break;
         }
 
         break;
