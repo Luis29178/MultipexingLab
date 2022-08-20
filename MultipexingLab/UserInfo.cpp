@@ -11,6 +11,7 @@ UserInfo::UserInfo(char* _userName, char* _ipAddress, int _socket)
 
 UserInfo::UserInfo()
 {
+
 }
 
 UserInfo::~UserInfo()
@@ -33,6 +34,7 @@ UserInfo::~UserInfo()
 //	memcpy(_socket, _socket, sizeof(userName));
 //
 //}
+
 char* UserInfo::getUserName() 
 {
 	return userName;

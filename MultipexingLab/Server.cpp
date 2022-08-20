@@ -139,15 +139,23 @@ int Server::ConnectService(uint16_t port, char* address)
 						{
 						case REGISTER:
 						{
-							UserInfo newUser = UserInfo(UserName, address, ComSocket);
-							Users[UserCount] = newUser;
-							UserCount++;
-							break;
+							if (UserCount <= 3)
+							{
+								UserInfo newUser = UserInfo(UserName, address, ComSocket);
+								Users[UserCount] = newUser;
+								UserCount++;
+								break;
+							}
+							else
+							{
+								std::cout << "Server is full!\n\n";
+								closesocket(ComSocket);
+							}
+							
 
 						}
 						case DISPLAY_CREDENTIAL:
 						{
-							UserInfo temp;
 							for (int i = 0; i < UserCount; i++)
 							{
 								if (Users[i].getipAddress() == address)
@@ -157,17 +165,19 @@ int Server::ConnectService(uint16_t port, char* address)
 									break;
 								}
 							}
-							
+							std::cout << "User is not Registered\n\n";
+							break;
 						}
 						case QUIT:
 						{
 							UserInfo* temp = new UserInfo[3];
+
 							int x = 0;
 							for (int i = 0; i < UserCount; i++)
 							{
 								if (Users[i].getSocket() == ComSocket)
 								{
-									
+									UserCount--;
 								}
 								else
 								{
